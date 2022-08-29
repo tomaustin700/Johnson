@@ -77,7 +77,11 @@ resource "azurerm_windows_function_app" "function" {
     "APIKeySecret"                    = var.api_key_secret,
   }
 
-  site_config {}
+  site_config {
+    application_stack {
+      dotnet_version = 6
+    }
+  }
 }
 
 
