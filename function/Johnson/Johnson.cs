@@ -14,7 +14,7 @@ namespace Johnson
     public class Johnson
     {
         [FunctionName(nameof(Tweet))]
-        public async Task Tweet([TimerTrigger("0 */6 * * *")] TimerInfo myTimer, ILogger log)
+        public async Task Tweet([TimerTrigger("0 0 */6 * * *")] TimerInfo myTimer, ILogger log)
         {
             using var httpClient = new HttpClient();
             var response = await httpClient.GetAsync($"https://api.peepquote.com/v2/search?person=Johnson");
