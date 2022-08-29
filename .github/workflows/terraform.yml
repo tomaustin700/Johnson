@@ -51,5 +51,5 @@ jobs:
         env:
           TF_VAR_access_token: ${{ secrets.ACCESS_TOKEN}}
           TF_VAR_access_token_secret: ${{ secrets.ACCESS_TOKEN_SECRET }}
-          TF_VAR_consumer_key: ${{ secrets.CONSUMER_KEY }}
-          TF_VAR_consumer_secret: ${{ secrets.CONSUMER_SECRET }}
+          TF_VAR_api_key: ${{ secrets.API_KEY }}
+          TF_VAR_api_key_secret: ${{ secrets.API_KEY_SECRET }}
