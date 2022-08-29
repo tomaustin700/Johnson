@@ -76,6 +76,8 @@ resource "azurerm_windows_function_app" "function" {
     "APIKey"                          = var.api_key,
     "APIKeySecret"                    = var.api_key_secret,
   }
+
+  site_config {}
 }
 
 
