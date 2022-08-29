@@ -42,7 +42,7 @@ variable "location" {
 
 
 resource "azurerm_storage_account" "functionstorage" {
-  name                     = "jstorage"
+  name                     = "johnsontwstorage"
   resource_group_name      = var.resource_group
   location                 = var.location
   account_tier             = "Standard"
