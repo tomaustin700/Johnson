@@ -86,3 +86,4 @@ resource "azurerm_windows_function_app" "function" {
 
 
 
+
