@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - "terraform/**"
+      - ".github\\workflows\\terraform.yml"
     branches:
       - main
   pull_request:
@@ -32,7 +33,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
+        uses: hashicorp/setup-terraform@v2
 
       - name: Terraform Format
         id: fmt
