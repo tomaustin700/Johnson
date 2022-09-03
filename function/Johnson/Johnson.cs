@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using System.Linq;
 using LinqToTwitter.OAuth;
 using LinqToTwitter;
+using LinqToTwitter.Common;
 
 namespace Johnson
 {
@@ -43,6 +44,44 @@ namespace Johnson
             var quote = quoteData.ElementAt(rInt);
 
             await tContext.TweetAsync(quote.quote);
+
+            string searchTerm = "\"peep show\" OR Alan Johnson";
+
+
+
+            // default is id and text and this also brings in created_at and geo
+            string tweetFields =
+                string.Join(",",
+                    new string[]
+                    {
+            TweetField.CreatedAt,
+            TweetField.ID,
+            TweetField.Text,
+            TweetField.Geo,
+            TweetField.AuthorID
+                    });
+
+            var searchResponse =
+                await
+                (from search in tContext.TwitterSearch
+                 where search.Type == SearchType.RecentSearch &&
+                       search.Query == searchTerm &&
+                       search.TweetFields == TweetField.AllFieldsExceptPermissioned &&
+                       search.Expansions == ExpansionField.AllTweetFields &&
+                       search.MediaFields == MediaField.AllFieldsExceptPermissioned &&
+                       search.PlaceFields == PlaceField.AllFields &&
+                       search.PollFields == PollField.AllFields &&
+                       search.UserFields == UserField.AllFields
+                 select search)
+                .SingleOrDefaultAsync();
+
+            if (searchResponse?.Tweets != null)
+            {
+                foreach (var tweet in searchResponse.Tweets)
+                {
+                    await tContext.FollowAsync("1564256640479764481", tweet.AuthorID);
+                }
+            }
         }
     }
 }
