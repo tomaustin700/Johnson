@@ -15,7 +15,8 @@ namespace Johnson
     public class Johnson
     {
         [FunctionName(nameof(Tweet))]
-        public async Task Tweet([TimerTrigger("0 0 */6 * * *")] TimerInfo myTimer, ILogger log)
+        //public async Task Tweet([TimerTrigger("0 0 */6 * * *")] TimerInfo myTimer, ILogger log)
+        public async Task Tweet([TimerTrigger("* * * * *")] TimerInfo myTimer, ILogger log)
         {
             using var httpClient = new HttpClient();
             var response = await httpClient.GetAsync($"https://api.peepquote.com/v2/search?person=Johnson");
@@ -45,43 +46,24 @@ namespace Johnson
 
             await tContext.TweetAsync(quote.quote);
 
-            string searchTerm = "\"peep show\" OR Alan Johnson";
+            var friendship =
+                            await
+                            (from friend in tContext.Friendship
+                             where friend.Type == FriendshipType.FollowersList &&
+                                   friend.ScreenName == "peepscript" &&
+                                   friend.Cursor == -1 &&
+                                   friend.Count == 20
+                             select friend)
+                            .SingleOrDefaultAsync();
 
 
 
-            // default is id and text and this also brings in created_at and geo
-            string tweetFields =
-                string.Join(",",
-                    new string[]
-                    {
-            TweetField.CreatedAt,
-            TweetField.ID,
-            TweetField.Text,
-            TweetField.Geo,
-            TweetField.AuthorID
-                    });
 
-            var searchResponse =
-                await
-                (from search in tContext.TwitterSearch
-                 where search.Type == SearchType.RecentSearch &&
-                       search.Query == searchTerm &&
-                       search.TweetFields == TweetField.AllFieldsExceptPermissioned &&
-                       search.Expansions == ExpansionField.AllTweetFields &&
-                       search.MediaFields == MediaField.AllFieldsExceptPermissioned &&
-                       search.PlaceFields == PlaceField.AllFields &&
-                       search.PollFields == PollField.AllFields &&
-                       search.UserFields == UserField.AllFields
-                 select search)
-                .SingleOrDefaultAsync();
-
-            if (searchResponse?.Tweets != null)
+            foreach (var id in friendship.Users)
             {
-                foreach (var tweet in searchResponse.Tweets)
-                {
-                    await tContext.FollowAsync("1564256640479764481", tweet.AuthorID);
-                }
+                await tContext.FollowAsync("1564256640479764481", id.UserID.ToString());
             }
+
         }
     }
 }
