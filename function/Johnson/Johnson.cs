@@ -15,8 +15,8 @@ namespace Johnson
     public class Johnson
     {
         [FunctionName(nameof(Tweet))]
-        //public async Task Tweet([TimerTrigger("0 0 */6 * * *")] TimerInfo myTimer, ILogger log)
-        public async Task Tweet([TimerTrigger("* * * * *")] TimerInfo myTimer, ILogger log)
+        public async Task Tweet([TimerTrigger("0 0 */6 * * *")] TimerInfo myTimer, ILogger log)
+        //public async Task Tweet([TimerTrigger("* * * * *")] TimerInfo myTimer, ILogger log)
         {
             using var httpClient = new HttpClient();
             var response = await httpClient.GetAsync($"https://api.peepquote.com/v2/search?person=Johnson");
@@ -61,7 +61,7 @@ namespace Johnson
 
             foreach (var id in friendship.Users)
             {
-                await tContext.FollowAsync("1564256640479764481", id.UserID.ToString());
+                await tContext.FollowAsync("1564256640479764481", id.UserIDResponse.ToString());
             }
 
         }
