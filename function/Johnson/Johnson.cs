@@ -64,6 +64,22 @@ namespace Johnson
                 await tContext.FollowAsync("1564256640479764481", id.UserIDResponse.ToString());
             }
 
+            TwitterUserQuery? userResponse =
+               await
+           (from user in tContext.TwitterUser
+            where user.Type == UserType.Following &&
+                  user.ID == "1564256640479764481" && user.PaginationToken == "VRVVVVVVVVVVUZZZ" && user.MaxResults == 20
+            select user)
+           .SingleOrDefaultAsync();
+
+
+
+            foreach (var id in userResponse.Users)
+            {
+                await tContext.UnFollowAsync("1564256640479764481", id.ID.ToString());
+            }
+
         }
+
     }
 }
