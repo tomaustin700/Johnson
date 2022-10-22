@@ -44,6 +44,24 @@ namespace Johnson
 
             var quote = quoteData.ElementAt(rInt);
 
+            TweetQuery? tweetResponse =
+               await
+               (from tweet in tContext.Tweets
+                where tweet.Type == TweetType.TweetsTimeline &&
+                      tweet.ID == "1564256640479764481" && tweet.MaxResults == 50
+                select tweet)
+               .SingleOrDefaultAsync();
+
+            var thisWeeks = tweetResponse.Tweets;
+
+            while (thisWeeks.Any(a => a.Text == quote.quote))
+            {
+                var wRnd = new Random();
+                int wRInt = wRnd.Next(0, quoteData.Count());
+
+                quote = quoteData.ElementAt(wRInt);
+            }
+
             await tContext.TweetAsync(quote.quote);
 
             var friendship =
@@ -76,7 +94,7 @@ namespace Johnson
 
             foreach (var id in userResponse.Users)
             {
-               // await tContext.UnFollowAsync("1564256640479764481", id.ID.ToString());
+                // await tContext.UnFollowAsync("1564256640479764481", id.ID.ToString());
             }
 
         }
