@@ -94,7 +94,7 @@ namespace Johnson
 
             foreach (var id in userResponse.Users)
             {
-                await tContext.UnFollowAsync("1564256640479764481", id.ID.ToString());
+                //await tContext.UnFollowAsync("1564256640479764481", id.ID.ToString());
             }
 
         }
