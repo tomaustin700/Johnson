@@ -9,14 +9,17 @@ using System.Linq;
 using LinqToTwitter.OAuth;
 using LinqToTwitter;
 using LinqToTwitter.Common;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
 
 namespace Johnson
 {
     public class Johnson
     {
         [FunctionName(nameof(Tweet))]
-        public async Task Tweet([TimerTrigger("0 0 */6 * * *")] TimerInfo myTimer, ILogger log)
-        //public async Task Tweet([TimerTrigger("* * * * *")] TimerInfo myTimer, ILogger log)
+        //public async Task Tweet([TimerTrigger("0 0 */6 * * *")] TimerInfo myTimer, ILogger log)
+        public async Task Tweet([TimerTrigger("* * * * *")] TimerInfo myTimer, ILogger log)
         {
             using var httpClient = new HttpClient();
             var response = await httpClient.GetAsync($"https://api.peepquote.com/v2/search?person=Johnson");
@@ -24,7 +27,7 @@ namespace Johnson
 
             var data = JsonSerializer.Deserialize<APIReponse>(body);
 
-            var quoteData = data.results.Where(a => a.quote.Length >= 30);
+            var quoteData = data.results.Where(a => a.quote.Length >= 30 && !string.IsNullOrEmpty(a.image));
 
             var auth = new SingleUserAuthorizer
             {
@@ -62,7 +65,15 @@ namespace Johnson
                 quote = quoteData.ElementAt(wRInt);
             }
 
-            await tContext.TweetAsync(quote.quote);
+            if (!string.IsNullOrEmpty(quote.image))
+            {
+                Media media = await tContext.UploadMediaAsync(await httpClient.GetByteArrayAsync(quote.image), "image/jpg", "tweet_image");
+                await tContext.TweetMediaAsync(quote.quote, new List<string> { media.MediaID.ToString() });
+            }
+            else
+            {
+                await tContext.TweetAsync(quote.quote);
+            }
 
             var friendship =
                             await

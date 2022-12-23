@@ -18,6 +18,7 @@ namespace Johnson
         public string quote { get; set; }
         public string episode { get; set; }
         public string person { get; set; }
+        public string image { get; set; }
     }
 
 }
