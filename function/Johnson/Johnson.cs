@@ -27,7 +27,7 @@ namespace Johnson
 
             var data = JsonSerializer.Deserialize<APIReponse>(body);
 
-            var quoteData = data.results.Where(a => a.quote.Length >= 30 && !string.IsNullOrEmpty(a.image));
+            var quoteData = data.results.Where(a => a.quote.Length >= 20);
 
             var auth = new SingleUserAuthorizer
             {
