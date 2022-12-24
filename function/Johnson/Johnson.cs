@@ -65,15 +65,15 @@ namespace Johnson
                 quote = quoteData.ElementAt(wRInt);
             }
 
-            if (!string.IsNullOrEmpty(quote.image))
-            {
-                Media media = await tContext.UploadMediaAsync(await httpClient.GetByteArrayAsync(quote.image), "image/jpg", "tweet_image");
-                await tContext.TweetMediaAsync(quote.quote, new List<string> { media.MediaID.ToString() });
-            }
-            else
-            {
+            //if (!string.IsNullOrEmpty(quote.image))
+            //{
+            //    Media media = await tContext.UploadMediaAsync(await httpClient.GetByteArrayAsync(quote.image), "image/jpg", "tweet_image");
+            //    await tContext.TweetMediaAsync(quote.quote, new List<string> { media.MediaID.ToString() });
+            //}
+            //else
+            //{
                 await tContext.TweetAsync(quote.quote);
-            }
+            //}
 
             var friendship =
                             await
