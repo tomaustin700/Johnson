@@ -42,28 +42,22 @@ namespace Johnson
 
             var tContext = new TwitterContext(auth);
 
-            var rnd = new Random();
-            int rInt = rnd.Next(0, quoteData.Count());
-
-            var quote = quoteData.ElementAt(rInt);
-
             TweetQuery? tweetResponse =
                await
                (from tweet in tContext.Tweets
                 where tweet.Type == TweetType.TweetsTimeline &&
-                      tweet.ID == "1564256640479764481" && tweet.MaxResults == 50
+                      tweet.ID == "1564256640479764481" && tweet.MaxResults == 100
                 select tweet)
                .SingleOrDefaultAsync();
 
-            var thisWeeks = tweetResponse.Tweets;
+            var old = tweetResponse.Tweets;
 
-            while (thisWeeks.Any(a => a.Text == quote.quote))
-            {
-                var wRnd = new Random();
-                int wRInt = wRnd.Next(0, quoteData.Count());
+            var newQuotes = quoteData.Where(aa => !old.Select(q => q.Text).Contains(aa.quote));
 
-                quote = quoteData.ElementAt(wRInt);
-            }
+            var rnd = new Random();
+            int rInt = rnd.Next(0, newQuotes.Count());
+
+            var quote = newQuotes.ElementAt(rInt);
 
             if (!string.IsNullOrEmpty(quote.image))
             {
@@ -93,20 +87,20 @@ namespace Johnson
                 await tContext.FollowAsync("1564256640479764481", id.UserIDResponse.ToString());
             }
 
-            TwitterUserQuery? userResponse =
-               await
-           (from user in tContext.TwitterUser
-            where user.Type == UserType.Following &&
-                  user.ID == "1564256640479764481" && user.PaginationToken == "VRVVVVVVVVVVUZZZ" && user.MaxResults == 20
-            select user)
-           .SingleOrDefaultAsync();
+            // TwitterUserQuery? userResponse =
+            //    await
+            //(from user in tContext.TwitterUser
+            // where user.Type == UserType.Following &&
+            //       user.ID == "1564256640479764481" && user.PaginationToken == "VRVVVVVVVVVVUZZZ" && user.MaxResults == 20
+            // select user)
+            //.SingleOrDefaultAsync();
 
 
 
-            foreach (var id in userResponse.Users)
-            {
-                //await tContext.UnFollowAsync("1564256640479764481", id.ID.ToString());
-            }
+            //foreach (var id in userResponse.Users)
+            //{
+            //await tContext.UnFollowAsync("1564256640479764481", id.ID.ToString());
+            //}
 
         }
 
