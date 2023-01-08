@@ -18,8 +18,8 @@ namespace Johnson
     public class Johnson
     {
         [FunctionName(nameof(Tweet))]
-        public async Task Tweet([TimerTrigger("0 0 */6 * * *")] TimerInfo myTimer, ILogger log)
-        //public async Task Tweet([TimerTrigger("* * * * *")] TimerInfo myTimer, ILogger log)
+        //public async Task Tweet([TimerTrigger("0 0 */6 * * *")] TimerInfo myTimer, ILogger log)
+        public async Task Tweet([TimerTrigger("* * * * *")] TimerInfo myTimer, ILogger log)
         {
             using var httpClient = new HttpClient();
             var response = await httpClient.GetAsync($"https://api.peepquote.com/v2/search?person=Johnson");
@@ -52,7 +52,7 @@ namespace Johnson
 
             var old = tweetResponse.Tweets;
 
-            var newQuotes = quoteData.Where(aa => !old.Select(q => q.Text).Contains(aa.quote));
+            var newQuotes = quoteData.Where(aa => !old.Select(q => q.Text.Split("https")[0]).Contains(aa.quote));
 
             var rnd = new Random();
             int rInt = rnd.Next(0, newQuotes.Count());
