@@ -52,7 +52,7 @@ namespace Johnson
 
             var old = tweetResponse.Tweets;
 
-            var newQuotes = quoteData.Where(aa => !old.Select(q => q.Text.Split("https")[0]).Contains(aa.quote));
+            var newQuotes = quoteData.Where(aa => !old.Select(q => q.Text.Split("https")[0]).Contains(aa.quote.Split("https")[0]));
 
             var rnd = new Random();
             int rInt = rnd.Next(0, newQuotes.Count());
