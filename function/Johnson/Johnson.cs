@@ -42,22 +42,22 @@ namespace Johnson
 
             var tContext = new TwitterContext(auth);
 
-            TweetQuery? tweetResponse =
-               await
-               (from tweet in tContext.Tweets
-                where tweet.Type == TweetType.TweetsTimeline &&
-                      tweet.ID == "1564256640479764481" && tweet.MaxResults == 100
-                select tweet)
-               .SingleOrDefaultAsync();
+            //TweetQuery? tweetResponse =
+            //   await
+            //   (from tweet in tContext.Tweets
+            //    where tweet.Type == TweetType.TweetsTimeline &&
+            //          tweet.ID == "1564256640479764481" && tweet.MaxResults == 100
+            //    select tweet)
+            //   .SingleOrDefaultAsync();
 
-            var old = tweetResponse.Tweets;
+            //var old = tweetResponse.Tweets;
 
-            var newQuotes = quoteData.Where(aa => !old.Select(q => q.Text.Split("https")[0]).Contains(aa.quote.Split("https")[0]));
+            //var newQuotes = quoteData.Where(aa => !old.Select(q => q.Text.Split("https")[0]).Contains(aa.quote.Split("https")[0]));
 
             var rnd = new Random();
-            int rInt = rnd.Next(0, newQuotes.Count());
+            int rInt = rnd.Next(0, quoteData.Count());
 
-            var quote = newQuotes.ElementAt(rInt);
+            var quote = quoteData.ElementAt(rInt);
 
             if (!string.IsNullOrEmpty(quote.image))
             {
